@@ -36,19 +36,17 @@ namespace GraphPlotter
             return amplitude;
         }
 
-        public void Plot(double availableHeight)
+        public void Plot(double availableHeight, double availableWidth)
         {
             var p = new Polyline();
-            var f = 2;
-            var fs = 500;
             var centreY = availableHeight / 2;
             var scaleY = (availableHeight - 10) / 2;
-            var maxPixelsX = 1800;
 
-            var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = maxPixelsX, Y1 = centreY, Y2 = centreY, StrokeThickness = 2 };
+
+            var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = availableWidth, Y1 = centreY, Y2 = centreY, StrokeThickness = 2 };
             canvasGraph.Children.Add(centreLine);
 
-            for (int n = 0; n < maxPixelsX; n++)
+            for (int n = 0; n < availableWidth; n++)
             {
                 var y = centreY - GetAmplitudeAt(n) * scaleY;
                 p.Points.Add(new Point(n, y));
@@ -57,7 +55,7 @@ namespace GraphPlotter
             p.StrokeThickness = 2;
             canvasGraph.Children.Add(p);
 
-            for (int n = 0; n < maxPixelsX; n += 30)
+            for (int n = 0; n < availableWidth; n += 30)
             {
                 var y = centreY - GetAmplitudeAt(n) * scaleY;
                 var l = new Line();

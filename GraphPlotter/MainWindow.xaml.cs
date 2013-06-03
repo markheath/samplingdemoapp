@@ -25,7 +25,7 @@ namespace GraphPlotter
         {
             InitializeComponent();
             graphDrawer = new GraphDrawer(canvasGraph);
-            this.Loaded += (sender, args) => graphDrawer.Plot(canvasGraph.ActualHeight);
+            this.Loaded += (sender, args) => graphDrawer.Plot(canvasGraph.ActualHeight, canvasGraph.ActualWidth);
             
         }
     }
