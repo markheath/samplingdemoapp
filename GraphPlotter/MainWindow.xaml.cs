@@ -23,21 +23,22 @@ namespace GraphPlotter
         public MainWindow()
         {
             InitializeComponent();
-            PlotGraph();
+            this.Loaded += (sender, args) => PlotGraph(canvasGraph.ActualHeight);
+            
         }
 
-        private void PlotGraph()
+        private void PlotGraph(double availableHeight)
         {
             var p = new Polyline();
             var f = 2;
             var fs = 500;
-            //Func<double,double> func = (n) => Math.Sin((n * f * 2 * Math.PI)/fs);
-            Func<double, double> func = (n) => Math.Sin((n * f * 2 * Math.PI) / fs) - 0.25 * Math.Sin((n * f * 8 * Math.PI) / fs);
-            var centreY = 300;
-            var scaleY = 200;
+            Func<double,double> func = (n) => Math.Sin((n * f * 2 * Math.PI)/fs);
+            //Func<double, double> func = (n) => Math.Sin((n * f * 2 * Math.PI) / fs) - 0.25 * Math.Sin((n * f * 8 * Math.PI) / fs);
+            var centreY = availableHeight / 2;
+            var scaleY = (availableHeight - 10) / 2;
             var maxPixelsX = 1800;
 
-            var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = maxPixelsX, Y1 = centreY, Y2 = centreY, StrokeThickness = 1 };
+            var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = maxPixelsX, Y1 = centreY, Y2 = centreY, StrokeThickness = 2 };
             canvasGraph.Children.Add(centreLine);
 
             for (int n = 0; n < maxPixelsX; n++)
@@ -48,7 +49,7 @@ namespace GraphPlotter
             }
             //p.Points.Dump();
             p.Stroke = Brushes.Black;
-            p.StrokeThickness = 1;
+            p.StrokeThickness = 2;
             canvasGraph.Children.Add(p);
 
             for (int n = 0; n < maxPixelsX; n += 30)
