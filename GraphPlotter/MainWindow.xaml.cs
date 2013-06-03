@@ -20,58 +20,13 @@ namespace GraphPlotter
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly GraphDrawer graphDrawer;
         public MainWindow()
         {
             InitializeComponent();
-            this.Loaded += (sender, args) => PlotGraph(canvasGraph.ActualHeight);
+            graphDrawer = new GraphDrawer(canvasGraph);
+            this.Loaded += (sender, args) => graphDrawer.Plot(canvasGraph.ActualHeight);
             
-        }
-
-        private void PlotGraph(double availableHeight)
-        {
-            var p = new Polyline();
-            var f = 2;
-            var fs = 500;
-            Func<double,double> func = (n) => Math.Sin((n * f * 2 * Math.PI)/fs);
-            //Func<double, double> func = (n) => Math.Sin((n * f * 2 * Math.PI) / fs) - 0.25 * Math.Sin((n * f * 8 * Math.PI) / fs);
-            var centreY = availableHeight / 2;
-            var scaleY = (availableHeight - 10) / 2;
-            var maxPixelsX = 1800;
-
-            var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = maxPixelsX, Y1 = centreY, Y2 = centreY, StrokeThickness = 2 };
-            canvasGraph.Children.Add(centreLine);
-
-            for (int n = 0; n < maxPixelsX; n++)
-            {
-                //var y = centreY - Math.Sin(n/(f * 2 * Math.PI)) * scaleY;
-                var y = centreY - func(n) * scaleY;
-                p.Points.Add(new Point(n, y));
-            }
-            //p.Points.Dump();
-            p.Stroke = Brushes.Black;
-            p.StrokeThickness = 2;
-            canvasGraph.Children.Add(p);
-
-            for (int n = 0; n < maxPixelsX; n += 30)
-            {
-                //var y = centreY - Math.Sin(n/(f * 2 * Math.PI)) * 200;
-                var y = centreY - func(n) * scaleY;
-                var l = new Line();
-                l.X1 = n;
-                l.X2 = n;
-                l.Y1 = centreY;
-                l.Y2 = y;
-                l.StrokeThickness = 2;
-                l.Stroke = Brushes.Red;
-                canvasGraph.Children.Add(l);
-                var e = new Ellipse();
-                e.Fill = Brushes.Red;
-                e.Width = 10;
-                e.Height = 10;
-                Canvas.SetLeft(e, n - 5);
-                Canvas.SetTop(e, y - 5);
-                canvasGraph.Children.Add(e);
-            }
         }
     }
 }
