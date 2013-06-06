@@ -29,7 +29,7 @@ namespace GraphPlotter
             SampleRate = 500;
             MaxSamples = 1000;
             Multiplier = 1;
-            func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) - 0.25 * Math.Sin((n * Frequency * 8 * Math.PI) / SampleRate);
+            func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) + 0.25 * Math.Sin(Math.PI/8+  ((n * Frequency * 8 * Math.PI) / SampleRate));
             this.canvasGraph = canvasGraph;
         }
 
@@ -54,34 +54,40 @@ namespace GraphPlotter
             var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = availableWidth, Y1 = centreY, Y2 = centreY, StrokeThickness = 2 };
             canvasGraph.Children.Add(centreLine);
 
-            for (int n = 0; n < availableWidth; n++)
+            for (int x = 0; x < availableWidth; x++)
             {
-                var y = centreY - GetAmplitudeAt(n) * scaleY;
-                p.Points.Add(new Point(n, y));
+                var y = centreY - GetAmplitudeAt(x) * scaleY;
+                p.Points.Add(new Point(x, y));
             }
             p.Stroke = Brushes.Black;
             p.StrokeThickness = 2;
             canvasGraph.Children.Add(p);
 
-            for (int n = 0; n < availableWidth; n += 30)
+            var samples = 0;
+            for (int x = 0; x < availableWidth && samples++ < MaxSamples; x += 30)
             {
-                var y = centreY - GetAmplitudeAt(n) * scaleY;
-                var l = new Line();
-                l.X1 = n;
-                l.X2 = n;
-                l.Y1 = centreY;
-                l.Y2 = y;
-                l.StrokeThickness = 2;
-                l.Stroke = Brushes.Red;
-                canvasGraph.Children.Add(l);
-                var e = new Ellipse();
-                e.Fill = Brushes.Red;
-                e.Width = 10;
-                e.Height = 10;
-                Canvas.SetLeft(e, n - 5);
-                Canvas.SetTop(e, y - 5);
-                canvasGraph.Children.Add(e);
+                AddSample(centreY, x, scaleY);
             }
+        }
+
+        private void AddSample(double centreY, int x, double scaleY)
+        {
+            var y = centreY - GetAmplitudeAt(x)*scaleY;
+            var l = new Line();
+            l.X1 = x;
+            l.X2 = x;
+            l.Y1 = centreY;
+            l.Y2 = y;
+            l.StrokeThickness = 2;
+            l.Stroke = Brushes.Red;
+            canvasGraph.Children.Add(l);
+            var e = new Ellipse();
+            e.Fill = Brushes.Red;
+            e.Width = 10;
+            e.Height = 10;
+            Canvas.SetLeft(e, x - 5);
+            Canvas.SetTop(e, y - 5);
+            canvasGraph.Children.Add(e);
         }
     }
 }
