@@ -38,6 +38,8 @@ namespace GraphPlotter
 
         public void Plot(double availableHeight, double availableWidth)
         {
+            canvasGraph.Children.Clear();
+
             var p = new Polyline();
             var centreY = availableHeight / 2;
             var scaleY = (availableHeight - 10) / 2;

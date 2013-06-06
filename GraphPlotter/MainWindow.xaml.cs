@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace GraphPlotter
 {
@@ -21,12 +22,26 @@ namespace GraphPlotter
     public partial class MainWindow : Window
     {
         private readonly GraphDrawer graphDrawer;
+        private bool redrawNeeded = false;
+        private readonly DispatcherTimer timer;
         public MainWindow()
         {
             InitializeComponent();
             graphDrawer = new GraphDrawer(canvasGraph);
-            this.Loaded += (sender, args) => graphDrawer.Plot(canvasGraph.ActualHeight, canvasGraph.ActualWidth);
-            
+            timer = new DispatcherTimer(TimeSpan.FromSeconds(0.5), DispatcherPriority.Normal, OnTimerTick, Dispatcher.CurrentDispatcher);
+            this.Loaded += (sender, args) => redrawNeeded = true;
+            this.SizeChanged += (sender, args) => redrawNeeded = true;
+
+        }
+
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            if (redrawNeeded)
+            {
+                graphDrawer.Plot(canvasGraph.ActualHeight, canvasGraph.ActualWidth);
+                redrawNeeded = false;
+            }
         }
     }
+
 }
