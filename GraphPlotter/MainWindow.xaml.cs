@@ -29,15 +29,24 @@ namespace GraphPlotter
             InitializeComponent();
             graphDrawer = new GraphDrawer(canvasGraph);
             timer = new DispatcherTimer(TimeSpan.FromSeconds(0.5), DispatcherPriority.Normal, OnTimerTick, Dispatcher.CurrentDispatcher);
-            this.Loaded += (sender, args) => redrawNeeded = true;
-            this.SizeChanged += (sender, args) => redrawNeeded = true;
+            this.Loaded += RedrawNeeded;
+            this.SizeChanged += RedrawNeeded;
+            samplesUpDown.ValueChanged += RedrawNeeded;
+            sliderAmplitude.ValueChanged += RedrawNeeded;
+        }
 
+        private void RedrawNeeded(object sender, EventArgs args)
+        {
+            redrawNeeded = true;
         }
 
         private void OnTimerTick(object sender, EventArgs e)
         {
             if (redrawNeeded)
             {
+                graphDrawer.MaxSamples = samplesUpDown.Value.GetValueOrDefault(1000);
+                graphDrawer.Multiplier = sliderAmplitude.Value;
+
                 graphDrawer.Plot(canvasGraph.ActualHeight, canvasGraph.ActualWidth);
                 redrawNeeded = false;
             }

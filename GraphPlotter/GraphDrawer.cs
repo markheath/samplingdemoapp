@@ -19,17 +19,23 @@ namespace GraphPlotter
         public double Frequency { get; set; }
         public double SampleRate { get; set; }
 
+        public int MaxSamples { get; set; }
+
+        public double Multiplier { get; set; }
+
         public GraphDrawer(Canvas canvasGraph)
         {
             Frequency = 2;
             SampleRate = 500;
+            MaxSamples = 1000;
+            Multiplier = 1;
             func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) - 0.25 * Math.Sin((n * Frequency * 8 * Math.PI) / SampleRate);
             this.canvasGraph = canvasGraph;
         }
 
         private double GetAmplitudeAt(double n)
         {
-            var amplitude = func(n);
+            var amplitude = Multiplier * func(n);
             // clip
             if (amplitude > 1.0) amplitude = 1.0;
             else if (amplitude < -1.0) amplitude = -1.0;
