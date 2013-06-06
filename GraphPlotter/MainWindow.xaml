@@ -15,6 +15,6 @@
             <xctk:IntegerUpDown Value="100" Width="60" VerticalAlignment="Center" x:Name="samplesUpDown" />
             
         </StackPanel>
-        <Canvas x:Name="canvasGraph" Grid.Row="1" />
+        <Canvas x:Name="canvasGraph" Grid.Row="1" Margin="10" />
     </Grid>
 </Window>

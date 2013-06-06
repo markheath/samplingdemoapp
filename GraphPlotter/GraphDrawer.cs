@@ -13,7 +13,6 @@ namespace GraphPlotter
     class GraphDrawer
     {
         private readonly Canvas canvasGraph;
-        //Func<double,double> func = (n) => Math.Sin((n * f * 2 * Math.PI)/fs);
         private readonly Func<double, double> func;
 
         public double Frequency { get; set; }
@@ -29,7 +28,8 @@ namespace GraphPlotter
             SampleRate = 500;
             MaxSamples = 1000;
             Multiplier = 1;
-            func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) + 0.25 * Math.Sin(Math.PI/8+  ((n * Frequency * 8 * Math.PI) / SampleRate));
+            //func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) + 0.25 * Math.Sin(Math.PI/8+  ((n * Frequency * 8 * Math.PI) / SampleRate));
+            func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate);
             this.canvasGraph = canvasGraph;
         }
 
