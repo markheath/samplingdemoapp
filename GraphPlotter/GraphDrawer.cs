@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,17 +11,19 @@ using System.Windows.Shapes;
 
 namespace GraphPlotter
 {
-    class GraphDrawer
+    internal class GraphDrawer
     {
         private readonly Canvas canvasGraph;
         private readonly Func<double, double> func;
-
+        private List<double> samples;
         public double Frequency { get; set; }
         public double SampleRate { get; set; }
 
         public int MaxSamples { get; set; }
 
         public double Multiplier { get; set; }
+
+        public IEnumerable Samples { get { return samples; } }
 
         public GraphDrawer(Canvas canvasGraph)
         {
@@ -29,13 +32,14 @@ namespace GraphPlotter
             MaxSamples = 1000;
             Multiplier = 1;
             //func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) + 0.25 * Math.Sin(Math.PI/8+  ((n * Frequency * 8 * Math.PI) / SampleRate));
-            func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate);
+            func = (n) => Math.Sin((n*Frequency*2*Math.PI)/SampleRate);
             this.canvasGraph = canvasGraph;
+            samples = new List<double>();
         }
 
         private double GetAmplitudeAt(double n)
         {
-            var amplitude = Multiplier * func(n);
+            var amplitude = Multiplier*func(n);
             // clip
             if (amplitude > 1.0) amplitude = 1.0;
             else if (amplitude < -1.0) amplitude = -1.0;
@@ -47,24 +51,32 @@ namespace GraphPlotter
             canvasGraph.Children.Clear();
 
             var p = new Polyline();
-            var centreY = availableHeight / 2;
-            var scaleY = (availableHeight - 10) / 2;
+            var centreY = availableHeight/2;
+            var scaleY = (availableHeight - 10)/2;
 
 
-            var centreLine = new Line() { Stroke = Brushes.Gray, X1 = 0, X2 = availableWidth, Y1 = centreY, Y2 = centreY, StrokeThickness = 2 };
+            var centreLine = new Line()
+                {
+                    Stroke = Brushes.Gray,
+                    X1 = 0,
+                    X2 = availableWidth,
+                    Y1 = centreY,
+                    Y2 = centreY,
+                    StrokeThickness = 2
+                };
             canvasGraph.Children.Add(centreLine);
 
             for (int x = 0; x < availableWidth; x++)
             {
-                var y = centreY - GetAmplitudeAt(x) * scaleY;
+                var y = centreY - GetAmplitudeAt(x)*scaleY;
                 p.Points.Add(new Point(x, y));
             }
             p.Stroke = Brushes.Black;
             p.StrokeThickness = 2;
             canvasGraph.Children.Add(p);
 
-            var samples = 0;
-            for (int x = 0; x < availableWidth && samples++ < MaxSamples; x += 30)
+            samples.Clear();
+            for (int x = 0; x < availableWidth && samples.Count < MaxSamples; x += 30)
             {
                 AddSample(centreY, x, scaleY);
             }
@@ -72,7 +84,9 @@ namespace GraphPlotter
 
         private void AddSample(double centreY, int x, double scaleY)
         {
-            var y = centreY - GetAmplitudeAt(x)*scaleY;
+            var sample = GetAmplitudeAt(x);
+            samples.Add(sample);
+            var y = centreY - sample*scaleY;
             var l = new Line();
             l.X1 = x;
             l.X2 = x;

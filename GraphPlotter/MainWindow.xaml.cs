@@ -46,8 +46,9 @@ namespace GraphPlotter
             {
                 graphDrawer.MaxSamples = samplesUpDown.Value.GetValueOrDefault(1000);
                 graphDrawer.Multiplier = sliderAmplitude.Value;
-
+                listBoxSamples.ItemsSource = null;
                 graphDrawer.Plot(canvasGraph.ActualHeight, canvasGraph.ActualWidth);
+                listBoxSamples.ItemsSource = graphDrawer.Samples;
                 redrawNeeded = false;
             }
         }
