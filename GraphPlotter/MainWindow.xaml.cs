@@ -33,8 +33,8 @@ namespace GraphPlotter
             this.SizeChanged += RedrawNeeded;
             samplesUpDown.ValueChanged += RedrawNeeded;
             sliderAmplitude.ValueChanged += RedrawNeeded;
-            checkBox16Bit.Checked += RedrawNeeded;
-            checkBoxFade.Checked += RedrawNeeded;
+            checkBox16Bit.Click += RedrawNeeded;
+            checkBoxFade.Click += RedrawNeeded;
             this.KeyUp += MainWindow_KeyUp;
         }
 

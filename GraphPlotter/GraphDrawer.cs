@@ -29,7 +29,7 @@ namespace GraphPlotter
 
         public GraphDrawer(Canvas canvasGraph)
         {
-            Frequency = 16; // 2 for the first example, 16 for the aliasing example
+            Frequency = 2; //16; // 2 for the first example, 16 for the aliasing example
             SampleRate = 500; // 500 for first example
             MaxSamples = 1000;
             Multiplier = 1;
@@ -47,12 +47,12 @@ namespace GraphPlotter
 
         private Brush SampleLineBrush
         {
-            get { return Fade ? Brushes.LightSalmon : Brushes.Red; }
+            get { return Fade ? Brushes.LightGray : Brushes.Red; }
         }
 
         private Brush SignalBrush
         {
-            get { return Fade ? Brushes.Gray : Brushes.Black;  }
+            get { return Fade ? Brushes.LightGray : Brushes.Black;  }
         }
 
         private double GetAmplitudeAt(double n)
