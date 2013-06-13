@@ -28,11 +28,26 @@ namespace GraphPlotter
         {
             InitializeComponent();
             graphDrawer = new GraphDrawer(canvasGraph);
-            timer = new DispatcherTimer(TimeSpan.FromSeconds(0.5), DispatcherPriority.Normal, OnTimerTick, Dispatcher.CurrentDispatcher);
+            timer = new DispatcherTimer(TimeSpan.FromSeconds(0.2), DispatcherPriority.Normal, OnTimerTick, Dispatcher.CurrentDispatcher);
             this.Loaded += RedrawNeeded;
             this.SizeChanged += RedrawNeeded;
             samplesUpDown.ValueChanged += RedrawNeeded;
             sliderAmplitude.ValueChanged += RedrawNeeded;
+            checkBox16Bit.Checked += RedrawNeeded;
+            checkBoxFade.Checked += RedrawNeeded;
+            this.KeyUp += MainWindow_KeyUp;
+        }
+
+        void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            /*if (e.Key == Key.Up)
+            {
+                samplesUpDown.Value++;
+            }
+            else if (e.Key == Key.Down)
+            {
+                samplesUpDown.Value--;
+            }*/
         }
 
         private void RedrawNeeded(object sender, EventArgs args)
@@ -46,9 +61,21 @@ namespace GraphPlotter
             {
                 graphDrawer.MaxSamples = samplesUpDown.Value.GetValueOrDefault(1000);
                 graphDrawer.Multiplier = sliderAmplitude.Value;
+                graphDrawer.Fade = checkBoxFade.IsChecked.Value;
+                
+
                 listBoxSamples.ItemsSource = null;
                 graphDrawer.Plot(canvasGraph.ActualHeight, canvasGraph.ActualWidth);
-                listBoxSamples.ItemsSource = graphDrawer.Samples;
+                if (checkBox16Bit.IsChecked.Value)
+                {
+                    listBoxSamples.ItemStringFormat = "";
+                    listBoxSamples.ItemsSource = graphDrawer.Samples.Select(s => (Int16)(s * 32767)); 
+                }
+                else
+                {
+                    listBoxSamples.ItemStringFormat = "0.00";
+                    listBoxSamples.ItemsSource = graphDrawer.Samples;
+                }
                 redrawNeeded = false;
             }
         }

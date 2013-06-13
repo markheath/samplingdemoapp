@@ -15,7 +15,7 @@ namespace GraphPlotter
     {
         private readonly Canvas canvasGraph;
         private readonly Func<double, double> func;
-        private List<double> samples;
+        private readonly List<double> samples;
         public double Frequency { get; set; }
         public double SampleRate { get; set; }
 
@@ -23,18 +23,36 @@ namespace GraphPlotter
 
         public double Multiplier { get; set; }
 
-        public IEnumerable Samples { get { return samples; } }
+        public IEnumerable<double> Samples { get { return samples; } }
+
+        public bool Fade { get; set; }
 
         public GraphDrawer(Canvas canvasGraph)
         {
-            Frequency = 2;
-            SampleRate = 500;
+            Frequency = 16; // 2 for the first example, 16 for the aliasing example
+            SampleRate = 500; // 500 for first example
             MaxSamples = 1000;
             Multiplier = 1;
             //func = (n) => Math.Sin((n * Frequency * 2 * Math.PI) / SampleRate) + 0.25 * Math.Sin(Math.PI/8+  ((n * Frequency * 8 * Math.PI) / SampleRate));
+            // to create square wave sin x + sin 3x / 3 + sin 5x / 5 etc
             func = (n) => Math.Sin((n*Frequency*2*Math.PI)/SampleRate);
             this.canvasGraph = canvasGraph;
             samples = new List<double>();
+        }
+
+        private Brush CentreLineBrush
+        {
+            get { return Fade ? Brushes.LightGray : Brushes.Gray; }
+        }
+
+        private Brush SampleLineBrush
+        {
+            get { return Fade ? Brushes.LightSalmon : Brushes.Red; }
+        }
+
+        private Brush SignalBrush
+        {
+            get { return Fade ? Brushes.Gray : Brushes.Black;  }
         }
 
         private double GetAmplitudeAt(double n)
@@ -57,7 +75,7 @@ namespace GraphPlotter
 
             var centreLine = new Line()
                 {
-                    Stroke = Brushes.Gray,
+                    Stroke = CentreLineBrush,
                     X1 = 0,
                     X2 = availableWidth,
                     Y1 = centreY,
@@ -71,7 +89,7 @@ namespace GraphPlotter
                 var y = centreY - GetAmplitudeAt(x)*scaleY;
                 p.Points.Add(new Point(x, y));
             }
-            p.Stroke = Brushes.Black;
+            p.Stroke = SignalBrush;
             p.StrokeThickness = 2;
             canvasGraph.Children.Add(p);
 
@@ -93,7 +111,7 @@ namespace GraphPlotter
             l.Y1 = centreY;
             l.Y2 = y;
             l.StrokeThickness = 2;
-            l.Stroke = Brushes.Red;
+            l.Stroke = SampleLineBrush;
             canvasGraph.Children.Add(l);
             var e = new Ellipse();
             e.Fill = Brushes.Red;
