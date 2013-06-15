@@ -22,8 +22,8 @@
                 <ColumnDefinition Width="100"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="listBoxSamples" Margin="10" ItemStringFormat="0.00"></ListBox>
-            <Canvas x:Name="canvasGraph" Grid.Column="1" Margin="10" />
+            <ListBox x:Name="listBoxSamples" Margin="10,20" ItemStringFormat="0.00"></ListBox>
+            <Canvas x:Name="canvasGraph" Grid.Column="1" Margin="10,20" />
 
         </Grid>
     </Grid>
