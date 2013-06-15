@@ -40,6 +40,11 @@ namespace GraphPlotter
 
         void MainWindow_KeyUp(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.F3)
+            {
+                checkBoxFade.IsChecked = !checkBoxFade.IsChecked.Value;
+                redrawNeeded = true;
+            }
             /*if (e.Key == Key.Up)
             {
                 samplesUpDown.Value++;
